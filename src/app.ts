@@ -18,6 +18,19 @@ const run = async () => {
       useUnifiedTopology: true,
     });
     console.log("Connected to DB!");
+
+    const db = client.db("safer-pw-frederik");
+
+    await db.collection("userData").insertOne({
+      user: "Frederik",
+      password: "superSicher123",
+      passwordIsSafe: true,
+      age: 29,
+      country: "Germany",
+      city: "Wiesbaden",
+      tags: ["male", "funny"],
+    });
+
     client.close();
   } catch (error) {
     console.error(error);
