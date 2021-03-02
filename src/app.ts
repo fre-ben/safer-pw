@@ -11,13 +11,16 @@ const run = async () => {
 
   const savePassword = await askSavePassword();
 
-  if (savePassword.answer === "yes") {
-    const password = await handleEnterPassword();
-    const validationPassword = await handleValidatePassword();
+  switch (savePassword.answer) {
+    case "yes":
+      const password = await handleEnterPassword();
+      const validationPassword = await handleValidatePassword();
 
-    handleCheckPassword(password.password, validationPassword.password);
-  } else {
-    printGoodbyeMessage();
+      handleCheckPassword(password.password, validationPassword.password);
+      break;
+    case "no":
+      printGoodbyeMessage();
+      break;
   }
 };
 
