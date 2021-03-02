@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import prompts, { Answers } from "prompts";
+import prompts from "prompts";
 
 type Answers = {
   answer: string;
