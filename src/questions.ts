@@ -2,12 +2,16 @@ import chalk from "chalk";
 import prompts from "prompts";
 
 type Answers = {
-  answer: string;
+  answer: "yes" | "no";
 };
 
-export const askForPassword = (): Promise<Answers> =>
+export const askSavePassword = (): Promise<Answers> =>
   prompts({
-    type: "text",
+    type: "select",
     name: "answer",
-    message: chalk.inverse("Do you want to save a password? (yes/no)"),
+    message: chalk.inverse("Do you want to save a password?"),
+    choices: [
+      { title: "Yes", value: "yes" },
+      { title: "No", value: "no" },
+    ],
   });

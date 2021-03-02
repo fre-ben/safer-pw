@@ -1,6 +1,10 @@
 import chalk from "chalk";
 import prompts from "prompts";
-import { printFailureMessage, printSuccessMessage } from "./messages";
+import {
+  printFailureMessage,
+  printGoodbyeMessage,
+  printSuccessMessage,
+} from "./messages";
 
 type Password = {
   password: string;
@@ -28,6 +32,7 @@ export const handleCheckPassword = (
 ) => {
   if (password === validationPassword) {
     printSuccessMessage();
+    printGoodbyeMessage();
   } else {
     printFailureMessage();
   }

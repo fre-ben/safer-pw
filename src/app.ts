@@ -4,20 +4,21 @@ import {
   handleValidatePassword,
 } from "./commands";
 import { printGoodbyeMessage, printWelcomeMessage } from "./messages";
-import { askForPassword } from "./questions";
+import { askSavePassword } from "./questions";
 
 const run = async () => {
   printWelcomeMessage();
 
-  const savePassword = await askForPassword();
+  const savePassword = await askSavePassword();
 
   if (savePassword.answer === "yes") {
     const password = await handleEnterPassword();
     const validationPassword = await handleValidatePassword();
 
     handleCheckPassword(password.password, validationPassword.password);
+  } else {
+    printGoodbyeMessage();
   }
-  printGoodbyeMessage();
 };
 
 run();

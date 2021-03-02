@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 export const printWelcomeMessage = () => {
-  console.log("Welcome to Safer-PW! 🔐");
+  console.log(chalk.greenBright("Welcome to Safer-PW! 🔐"));
 };
 
 export const printSuccessMessage = () => {
