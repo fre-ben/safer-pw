@@ -6,22 +6,65 @@ import {
 import { printGoodbyeMessage, printWelcomeMessage } from "./messages";
 import { askSavePassword } from "./questions";
 
+import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
+import {
+  closeDB,
+  connectDB,
+  createPasswordDoc,
+  deletePasswordDoc,
+  getCollection,
+  readPasswordDoc,
+  updatePasswordDoc,
+  updatePasswordValue,
+} from "./db";
+dotenv.config();
+
 const run = async () => {
-  printWelcomeMessage();
+  const url = process.env.MONGODB_URL;
 
-  const savePassword = await askSavePassword();
+  try {
+    await connectDB(url, "safer-pw-frederik");
+    // await createPasswordDoc({
+    //   name: "Boris",
+    //   value: "12345",
+    // });
+    await updatePasswordValue("Frederik", "LeckerSchnitzel");
+    // console.log(
+    //   await updatePasswordDoc("Freddy", {
+    //     name: "Frederik",
+    //     value: "testdfsfili",
+    //   })
+    // );
 
-  switch (savePassword.answer) {
-    case "yes":
-      const password = await handleEnterPassword();
-      const validationPassword = await handleValidatePassword();
-
-      handleCheckPassword(password.password, validationPassword.password);
-      break;
-    case "no":
-      printGoodbyeMessage();
-      break;
+    // console.log(await deletePasswordDoc("Boris"));
+    await closeDB();
+  } catch (error) {
+    console.error(error);
   }
+
+  //   printWelcomeMessage();
+  //   const savePassword = await askSavePassword();
+  //   switch (savePassword.answer) {
+  //     case "yes":
+  //       const password = await handleEnterPassword();
+  //       const validationPassword = await handleValidatePassword();
+  //       handleCheckPassword(password.password, validationPassword.password);
+  //       break;
+  //     case "no":
+  //       printGoodbyeMessage();
+  //       break;
+  //   }
 };
 
 run();
+
+// await db.collection("userData").insertOne({
+//   user: "Frederik",
+//   password: "superSicher123",
+//   passwordIsSafe: true,
+//   age: 29,
+//   country: "Germany",
+//   city: "Wiesbaden",
+//   tags: ["male", "funny"],
+// });
