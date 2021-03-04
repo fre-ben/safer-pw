@@ -16,6 +16,7 @@ import {
   getCollection,
   readPasswordDoc,
   updatePasswordDoc,
+  updatePasswordValue,
 } from "./db";
 dotenv.config();
 
@@ -28,8 +29,15 @@ const run = async () => {
     //   name: "Boris",
     //   value: "12345",
     // });
-    // await updatePasswordDoc("Frederik", { value: "HALLO!!!" });
-    await deletePasswordDoc("Boris");
+    await updatePasswordValue("Frederik", "LeckerSchnitzel");
+    // console.log(
+    //   await updatePasswordDoc("Freddy", {
+    //     name: "Frederik",
+    //     value: "testdfsfili",
+    //   })
+    // );
+
+    // console.log(await deletePasswordDoc("Boris"));
     await closeDB();
   } catch (error) {
     console.error(error);

@@ -4,7 +4,7 @@ let client: MongoClient = null;
 let db: Db = null;
 
 export type PasswordDoc = {
-  name?: string;
+  name: string;
   value: string;
 };
 
@@ -33,16 +33,29 @@ export async function readPasswordDoc(passwordName: string) {
 
 export async function updatePasswordDoc(
   passwordName: string,
-  passwordDoc: PasswordDoc
-) {
-  const passwordCollection = await getCollection("userData");
-  return await passwordCollection.updateOne(
+  fieldsToUpdate: Partial<PasswordDoc>
+): Promise<boolean> {
+  const passwordCollection = await getCollection<PasswordDoc>("userData");
+  const updateResult = await passwordCollection.updateOne(
     { name: passwordName },
-    { $set: passwordDoc }
+    { $set: fieldsToUpdate }
   );
+  return updateResult.modifiedCount >= 1;
 }
 
-export async function deletePasswordDoc(passwordName: string) {
-  const passwordCollection = await getCollection("userData");
-  return await passwordCollection.deleteOne({ name: passwordName });
+export async function updatePasswordValue(
+  passwordName: string,
+  newPasswordValue: string
+): Promise<boolean> {
+  return await updatePasswordDoc(passwordName, { value: newPasswordValue });
+}
+
+export async function deletePasswordDoc(
+  passwordName: string
+): Promise<boolean> {
+  const passwordCollection = await getCollection<PasswordDoc>("userData");
+  const deleteResult = await passwordCollection.deleteOne({
+    name: passwordName,
+  });
+  return deleteResult.deletedCount >= 1;
 }
