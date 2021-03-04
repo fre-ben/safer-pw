@@ -16,6 +16,7 @@ const run = async () => {
 
   try {
     await connectDB(url, "safer-pw-frederik");
+
     printWelcomeMessage();
     const saveOrReadPassword = await (await askSaveOrReadPassword()).answer;
 
@@ -28,7 +29,6 @@ const run = async () => {
         break;
       case "read":
         await handleReadPassword();
-        await printGoodbyeMessage();
         break;
     }
     await closeDB();

@@ -62,12 +62,16 @@ export const handleReadPassword = async () => {
   });
   const password = await readPasswordDoc(nameSearch.name);
   if (!password) {
-    console.log("No user found. Please try again.");
+    console.log(
+      chalk.bgRed.black("No user found. ") +
+        chalk.bgBlue.black("Please try again. ↩ ")
+    );
   } else {
     console.log(
       `Password for user ${chalk.inverse(nameSearch.name)} is: ${chalk.green(
         password.value
       )}`
     );
+    await printGoodbyeMessage();
   }
 };
