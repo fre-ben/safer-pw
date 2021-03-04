@@ -36,6 +36,9 @@ export async function readPasswordDoc(
 ): Promise<PasswordDoc> {
   const passwordCollection = await getCollection<PasswordDoc>("userData");
   const passwordDoc = await passwordCollection.findOne({ name: passwordName });
+  if (!passwordDoc) {
+    return null;
+  }
   return {
     name: passwordDoc.name,
     value: decryptPassword(passwordDoc.value),

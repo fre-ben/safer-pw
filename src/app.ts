@@ -1,11 +1,12 @@
 import {
-  handleCheckPassword,
   handleEnterName,
   handleEnterPassword,
+  handleReadPassword,
+  handleSavePassword,
   handleValidatePassword,
 } from "./commands";
 import { printGoodbyeMessage, printWelcomeMessage } from "./messages";
-import { askSavePassword } from "./questions";
+import { askSaveOrReadPassword } from "./questions";
 
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
@@ -27,21 +28,18 @@ const run = async () => {
   try {
     await connectDB(url, "safer-pw-frederik");
     printWelcomeMessage();
-    const savePassword = await askSavePassword();
+    const saveOrReadPassword = await (await askSaveOrReadPassword()).answer;
 
-    switch (savePassword.answer) {
-      case "yes":
+    switch (saveOrReadPassword) {
+      case "save":
         const name = await handleEnterName();
         const password = await handleEnterPassword();
         const validationPassword = await handleValidatePassword();
-        await handleCheckPassword(
-          password.value,
-          validationPassword.value,
-          name.name
-        );
+        await handleSavePassword(password, validationPassword, name);
         break;
-      case "no":
-        printGoodbyeMessage();
+      case "read":
+        await handleReadPassword();
+        await printGoodbyeMessage();
         break;
     }
     await closeDB();
@@ -51,19 +49,3 @@ const run = async () => {
 };
 
 run();
-
-// await createPasswordDoc({
-//   name: "Frederik",
-//   value: "döner2000",
-// });
-// console.log(await readPasswordDoc("Eva"));
-// console.log(await updatePasswordValue("Frederik", "LeckerSchnitzel"));
-// console.log(
-//   await updatePasswordDoc("Freddy", {
-//     name: "Frederik",
-//     value: "testdfsfili",
-//   })
-// );
-
-// console.log(await deletePasswordDoc("Boris"));
-// await closeDB();

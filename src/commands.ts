@@ -1,49 +1,73 @@
 import chalk from "chalk";
 import prompts from "prompts";
-import { createPasswordDoc, PasswordDoc } from "./db";
+import { createPasswordDoc, PasswordDoc, readPasswordDoc } from "./db";
 import {
   printFailureMessage,
   printGoodbyeMessage,
   printSuccessMessage,
 } from "./messages";
 
-export const handleEnterPassword = (): Promise<Partial<PasswordDoc>> => {
-  return prompts({
-    type: "password",
-    name: "value",
-    message: chalk.inverse("Enter the password:"),
-  });
+export const handleEnterPassword = async (): Promise<string> => {
+  return (
+    await prompts({
+      type: "password",
+      name: "value",
+      message: chalk.inverse("Enter the password:"),
+    })
+  ).value;
 };
 
-export const handleValidatePassword = (): Promise<Partial<PasswordDoc>> => {
-  return prompts({
-    type: "password",
-    name: "value",
-    message: chalk.inverse("Please re-enter password to validate:"),
-  });
+export const handleValidatePassword = async (): Promise<string> => {
+  return (
+    await prompts({
+      type: "password",
+      name: "value",
+      message: chalk.inverse("Please re-enter password to validate:"),
+    })
+  ).value;
 };
 
-export const handleEnterName = (): Promise<Partial<PasswordDoc>> => {
-  return prompts({
-    type: "text",
-    name: "name",
-    message: chalk.inverse("Enter your name: "),
-  });
+export const handleEnterName = async (): Promise<string> => {
+  return (
+    await prompts({
+      type: "text",
+      name: "name",
+      message: chalk.inverse("Enter your name: "),
+    })
+  ).name;
 };
 
-export const handleCheckPassword = async (
+export const handleSavePassword = async (
   password: string,
   validationPassword: string,
   name: string
 ) => {
   if (password === validationPassword) {
     printSuccessMessage();
-    printGoodbyeMessage();
     await createPasswordDoc({
       name: name,
       value: password,
     });
+    printGoodbyeMessage();
   } else {
     printFailureMessage();
+  }
+};
+
+export const handleReadPassword = async () => {
+  const nameSearch = await prompts({
+    type: "text",
+    name: "name",
+    message: chalk.inverse("Enter username: "),
+  });
+  const password = await readPasswordDoc(nameSearch.name);
+  if (!password) {
+    console.log("No user found. Please try again.");
+  } else {
+    console.log(
+      `Password for user ${chalk.inverse(nameSearch.name)} is: ${chalk.green(
+        password.value
+      )}`
+    );
   }
 };
