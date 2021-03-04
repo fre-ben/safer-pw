@@ -33,7 +33,9 @@ export const handleCheckPassword = (
   if (password === validationPassword) {
     printSuccessMessage();
     printGoodbyeMessage();
+    return true;
   } else {
     printFailureMessage();
+    return false;
   }
 };

@@ -25,46 +25,46 @@ const run = async () => {
 
   try {
     await connectDB(url, "safer-pw-frederik");
-    // await createPasswordDoc({
-    //   name: "Boris",
-    //   value: "12345",
-    // });
-    await updatePasswordValue("Frederik", "LeckerSchnitzel");
-    // console.log(
-    //   await updatePasswordDoc("Freddy", {
-    //     name: "Frederik",
-    //     value: "testdfsfili",
-    //   })
-    // );
+    printWelcomeMessage();
+    const savePassword = await askSavePassword();
 
-    // console.log(await deletePasswordDoc("Boris"));
+    switch (savePassword.answer) {
+      case "yes":
+        const password = await handleEnterPassword();
+        const validationPassword = await handleValidatePassword();
+        if (
+          handleCheckPassword(password.password, validationPassword.password)
+        ) {
+          await createPasswordDoc({
+            name: "Testuser6",
+            value: password.password,
+          });
+        }
+        break;
+      case "no":
+        printGoodbyeMessage();
+        break;
+    }
     await closeDB();
   } catch (error) {
     console.error(error);
   }
-
-  //   printWelcomeMessage();
-  //   const savePassword = await askSavePassword();
-  //   switch (savePassword.answer) {
-  //     case "yes":
-  //       const password = await handleEnterPassword();
-  //       const validationPassword = await handleValidatePassword();
-  //       handleCheckPassword(password.password, validationPassword.password);
-  //       break;
-  //     case "no":
-  //       printGoodbyeMessage();
-  //       break;
-  //   }
 };
 
 run();
 
-// await db.collection("userData").insertOne({
-//   user: "Frederik",
-//   password: "superSicher123",
-//   passwordIsSafe: true,
-//   age: 29,
-//   country: "Germany",
-//   city: "Wiesbaden",
-//   tags: ["male", "funny"],
+// await createPasswordDoc({
+//   name: "Frederik",
+//   value: "döner2000",
 // });
+// console.log(await readPasswordDoc("Eva"));
+// console.log(await updatePasswordValue("Frederik", "LeckerSchnitzel"));
+// console.log(
+//   await updatePasswordDoc("Freddy", {
+//     name: "Frederik",
+//     value: "testdfsfili",
+//   })
+// );
+
+// console.log(await deletePasswordDoc("Boris"));
+// await closeDB();
