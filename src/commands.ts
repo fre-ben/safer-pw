@@ -54,7 +54,7 @@ export const handleSavePassword = async (
   }
 };
 
-export const handleReadPassword = async () => {
+export const handleReadPassword = async (): Promise<void> => {
   const nameSearch = await prompts({
     type: "text",
     name: "name",
