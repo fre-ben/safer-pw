@@ -7,19 +7,8 @@ import {
 } from "./commands";
 import { printGoodbyeMessage, printWelcomeMessage } from "./messages";
 import { askSaveOrReadPassword } from "./questions";
-
-import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import {
-  closeDB,
-  connectDB,
-  createPasswordDoc,
-  deletePasswordDoc,
-  getCollection,
-  readPasswordDoc,
-  updatePasswordDoc,
-  updatePasswordValue,
-} from "./db";
+import { closeDB, connectDB } from "./db";
 dotenv.config();
 
 const run = async () => {
