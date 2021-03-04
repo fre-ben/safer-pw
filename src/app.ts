@@ -1,5 +1,6 @@
 import {
   handleCheckPassword,
+  handleEnterName,
   handleEnterPassword,
   handleValidatePassword,
 } from "./commands";
@@ -30,12 +31,13 @@ const run = async () => {
 
     switch (savePassword.answer) {
       case "yes":
-        // const name = await handleEnterName();
+        const name = await handleEnterName();
         const password = await handleEnterPassword();
         const validationPassword = await handleValidatePassword();
         await handleCheckPassword(
-          password.password,
-          validationPassword.password
+          password.value,
+          validationPassword.value,
+          name.name
         );
         break;
       case "no":

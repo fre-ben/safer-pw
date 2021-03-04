@@ -1,41 +1,46 @@
 import chalk from "chalk";
 import prompts from "prompts";
-import { createPasswordDoc } from "./db";
+import { createPasswordDoc, PasswordDoc } from "./db";
 import {
   printFailureMessage,
   printGoodbyeMessage,
   printSuccessMessage,
 } from "./messages";
 
-type Password = {
-  password: string;
-};
-
-export const handleEnterPassword = (): Promise<Password> => {
+export const handleEnterPassword = (): Promise<Partial<PasswordDoc>> => {
   return prompts({
     type: "password",
-    name: "password",
+    name: "value",
     message: chalk.inverse("Enter the password:"),
   });
 };
 
-export const handleValidatePassword = (): Promise<Password> => {
+export const handleValidatePassword = (): Promise<Partial<PasswordDoc>> => {
   return prompts({
     type: "password",
-    name: "password",
+    name: "value",
     message: chalk.inverse("Please re-enter password to validate:"),
+  });
+};
+
+export const handleEnterName = (): Promise<Partial<PasswordDoc>> => {
+  return prompts({
+    type: "text",
+    name: "name",
+    message: chalk.inverse("Enter your name: "),
   });
 };
 
 export const handleCheckPassword = async (
   password: string,
-  validationPassword: string
+  validationPassword: string,
+  name: string
 ) => {
   if (password === validationPassword) {
     printSuccessMessage();
     printGoodbyeMessage();
     await createPasswordDoc({
-      name: "Testuser7",
+      name: name,
       value: password,
     });
   } else {
