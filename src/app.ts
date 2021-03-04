@@ -5,7 +5,7 @@ import {
   handleSavePassword,
   handleValidatePassword,
 } from "./commands";
-import { printGoodbyeMessage, printWelcomeMessage } from "./messages";
+import { printWelcomeMessage } from "./messages";
 import { askSaveOrReadPassword } from "./questions";
 import dotenv from "dotenv";
 import { closeDB, connectDB } from "./db";
