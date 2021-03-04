@@ -30,16 +30,13 @@ const run = async () => {
 
     switch (savePassword.answer) {
       case "yes":
+        // const name = await handleEnterName();
         const password = await handleEnterPassword();
         const validationPassword = await handleValidatePassword();
-        if (
-          handleCheckPassword(password.password, validationPassword.password)
-        ) {
-          await createPasswordDoc({
-            name: "Testuser6",
-            value: password.password,
-          });
-        }
+        await handleCheckPassword(
+          password.password,
+          validationPassword.password
+        );
         break;
       case "no":
         printGoodbyeMessage();

@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import prompts from "prompts";
+import { createPasswordDoc } from "./db";
 import {
   printFailureMessage,
   printGoodbyeMessage,
@@ -26,16 +27,18 @@ export const handleValidatePassword = (): Promise<Password> => {
   });
 };
 
-export const handleCheckPassword = (
+export const handleCheckPassword = async (
   password: string,
   validationPassword: string
 ) => {
   if (password === validationPassword) {
     printSuccessMessage();
     printGoodbyeMessage();
-    return true;
+    await createPasswordDoc({
+      name: "Testuser7",
+      value: password,
+    });
   } else {
     printFailureMessage();
-    return false;
   }
 };
