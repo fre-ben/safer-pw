@@ -1,23 +1,14 @@
 import {
-  handleCheckPassword,
+  handleEnterName,
   handleEnterPassword,
+  handleReadPassword,
+  handleSavePassword,
   handleValidatePassword,
 } from "./commands";
-import { printGoodbyeMessage, printWelcomeMessage } from "./messages";
-import { askSavePassword } from "./questions";
-
-import { MongoClient } from "mongodb";
+import { printWelcomeMessage } from "./messages";
+import { askSaveOrReadPassword } from "./questions";
 import dotenv from "dotenv";
-import {
-  closeDB,
-  connectDB,
-  createPasswordDoc,
-  deletePasswordDoc,
-  getCollection,
-  readPasswordDoc,
-  updatePasswordDoc,
-  updatePasswordValue,
-} from "./db";
+import { closeDB, connectDB } from "./db";
 dotenv.config();
 
 const run = async () => {
@@ -25,46 +16,25 @@ const run = async () => {
 
   try {
     await connectDB(url, "safer-pw-frederik");
-    // await createPasswordDoc({
-    //   name: "Boris",
-    //   value: "12345",
-    // });
-    await updatePasswordValue("Frederik", "LeckerSchnitzel");
-    // console.log(
-    //   await updatePasswordDoc("Freddy", {
-    //     name: "Frederik",
-    //     value: "testdfsfili",
-    //   })
-    // );
 
-    // console.log(await deletePasswordDoc("Boris"));
+    printWelcomeMessage();
+    const saveOrReadPassword = await (await askSaveOrReadPassword()).answer;
+
+    switch (saveOrReadPassword) {
+      case "save":
+        const name = await handleEnterName();
+        const password = await handleEnterPassword();
+        const validationPassword = await handleValidatePassword();
+        await handleSavePassword(password, validationPassword, name);
+        break;
+      case "read":
+        await handleReadPassword();
+        break;
+    }
     await closeDB();
   } catch (error) {
     console.error(error);
   }
-
-  //   printWelcomeMessage();
-  //   const savePassword = await askSavePassword();
-  //   switch (savePassword.answer) {
-  //     case "yes":
-  //       const password = await handleEnterPassword();
-  //       const validationPassword = await handleValidatePassword();
-  //       handleCheckPassword(password.password, validationPassword.password);
-  //       break;
-  //     case "no":
-  //       printGoodbyeMessage();
-  //       break;
-  //   }
 };
 
 run();
-
-// await db.collection("userData").insertOne({
-//   user: "Frederik",
-//   password: "superSicher123",
-//   passwordIsSafe: true,
-//   age: 29,
-//   country: "Germany",
-//   city: "Wiesbaden",
-//   tags: ["male", "funny"],
-// });
