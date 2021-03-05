@@ -1,0 +1,22 @@
+### GET index
+GET http://localhost:3333/
+
+### GET a password name
+GET http://localhost:3333/api/passwords/Willi
+
+### GET an unknown pasword by name
+GET http://localhost:3333/api/passwords/LALALAfajfjajf
+
+### POST a new password
+POST http://localhost:3333/api/passwords
+Content-Type: application/json
+
+ {
+     "name": "Tralalla",
+     "value": "Supertoll"
+ }
+
+
+### DELETE a password
+DELETE http://localhost:3333/api/passwords/Gertruddde
+
