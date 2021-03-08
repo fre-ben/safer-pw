@@ -19,11 +19,25 @@ const parseJSONBody = <T>(request: http.IncomingMessage): Promise<T> => {
   });
 };
 
+const getPasswordName = (
+  request: http.IncomingMessage,
+  response: http.ServerResponse
+): string => {
+  const parts = request.url.match(/\/api\/passwords\/(\w+)/);
+  if (!parts) {
+    response.statusCode = 400;
+    response.end();
+    return;
+  }
+  const [, passwordName] = parts;
+  return passwordName;
+};
+
 export const handleGet = async (
   request: http.IncomingMessage,
-  response: http.ServerResponse,
-  passwordName: string
+  response: http.ServerResponse
 ) => {
+  const passwordName = getPasswordName(request, response);
   const passwordDoc = await readPasswordDoc(passwordName);
   if (!passwordDoc) {
     response.statusCode = 404;
@@ -37,9 +51,9 @@ export const handleGet = async (
 
 export const handleDelete = async (
   request: http.IncomingMessage,
-  response: http.ServerResponse,
-  passwordName: string
+  response: http.ServerResponse
 ) => {
+  const passwordName = getPasswordName(request, response);
   const isSuccessful = await deletePasswordDoc(passwordName);
 
   if (!isSuccessful) {

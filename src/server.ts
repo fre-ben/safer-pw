@@ -10,20 +10,6 @@ const url = process.env.MONGODB_URL;
 
 connectDB(url, "safer-pw-frederik");
 
-const getPasswordName = (
-  request: http.IncomingMessage,
-  response: http.ServerResponse
-): string => {
-  const parts = request.url.match(/\/api\/passwords\/(\w+)/);
-  if (!parts) {
-    response.statusCode = 400;
-    response.end();
-    return;
-  }
-  const [, passwordName] = parts;
-  return passwordName;
-};
-
 const server = http.createServer(
   async (request: http.IncomingMessage, response: http.ServerResponse) => {
     if (request.url === "/") {
@@ -33,10 +19,8 @@ const server = http.createServer(
       return;
     }
 
-    const passwordName = getPasswordName(request, response);
-
     if (request.method === "GET") {
-      handleGet(request, response, passwordName);
+      handleGet(request, response);
       return;
     }
 
@@ -46,7 +30,7 @@ const server = http.createServer(
     }
 
     if (request.method === "DELETE") {
-      handleDelete(request, response, passwordName);
+      handleDelete(request, response);
       return;
     }
 
