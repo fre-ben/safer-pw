@@ -1,12 +1,7 @@
-import http, { request } from "http";
+import http from "http";
 import dotenv from "dotenv";
-import {
-  connectDB,
-  createPasswordDoc,
-  deletePasswordDoc,
-  PasswordDoc,
-  readPasswordDoc,
-} from "./db";
+import { connectDB } from "./db";
+import { handleDelete, handleGet, handlePost } from "./routes";
 
 dotenv.config();
 
@@ -15,78 +10,43 @@ const url = process.env.MONGODB_URL;
 
 connectDB(url, "safer-pw-frederik");
 
+const getPasswordName = (
+  request: http.IncomingMessage,
+  response: http.ServerResponse
+): string => {
+  const parts = request.url.match(/\/api\/passwords\/(\w+)/);
+  if (!parts) {
+    response.statusCode = 400;
+    response.end();
+    return;
+  }
+  const [, passwordName] = parts;
+  return passwordName;
+};
+
 const server = http.createServer(
   async (request: http.IncomingMessage, response: http.ServerResponse) => {
-    // const parseJSONBody = <T>(request: http.IncomingMessage): Promise<T> => {
-    //   return new Promise((resolve) => {
-    //     let data = "";
-    //     request.on("data", (chunk) => {
-    //       data += chunk;
-    //     });
-    //     request.on("end", () => {
-    //       resolve(JSON.parse(data));
-    //     });
-    //   });
-    // };
-
     if (request.url === "/") {
       response.statusCode = 200;
       response.setHeader("Content-Type", "text/html");
       response.end("<h1>Safer PW!</h1>");
       return;
     }
-    const parts = request.url.split("/");
-    const passwordName = parts[parts.length - 1];
+
+    const passwordName = getPasswordName(request, response);
 
     if (request.method === "GET") {
-      const passwordDoc = await readPasswordDoc(passwordName);
-      if (!passwordDoc) {
-        response.statusCode = 404;
-        response.end();
-        return;
-      }
-      response.statusCode = 200;
-      response.setHeader("Content-Type", "application/json");
-      response.end(JSON.stringify(passwordDoc));
+      handleGet(request, response, passwordName);
       return;
     }
 
     if (request.method === "POST") {
-      //   const newPassword = await parseJSONBody<PasswordDoc>(request);
-      //   const passwordDoc = await createPasswordDoc(newPassword);
-
-      let data = "";
-      request.on("data", (chunk) => {
-        data += chunk;
-      });
-      request.on("end", async () => {
-        const enterName = JSON.parse(data).name;
-        const enterValue = JSON.parse(data).value;
-        response.statusCode = 200;
-        response.setHeader("Content-Type", "application/json");
-        //   response.end(JSON.stringify(passwordDoc));
-        response.end(
-          JSON.stringify(
-            await createPasswordDoc({
-              name: enterName,
-              value: enterValue,
-            })
-          )
-        );
-      });
+      handlePost(request, response);
       return;
     }
 
     if (request.method === "DELETE") {
-      const passwordDoc = await readPasswordDoc(passwordName);
-      if (!passwordDoc) {
-        response.statusCode = 404;
-        response.end();
-        return;
-      }
-      response.statusCode = 200;
-      response.setHeader("Content-Type", "application/json");
-      response.end(JSON.stringify(await deletePasswordDoc(passwordName)));
+      handleDelete(request, response, passwordName);
       return;
     }
 

@@ -12,11 +12,11 @@ POST http://localhost:3333/api/passwords
 Content-Type: application/json
 
  {
-     "name": "Tralalla",
-     "value": "Supertoll"
+     "name": "McFly",
+     "value": "outatime"
  }
 
 
 ### DELETE a password
-DELETE http://localhost:3333/api/passwords/Gertruddde
+DELETE http://localhost:3333/api/passwords/McFly
 
