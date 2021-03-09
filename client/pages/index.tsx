@@ -1,6 +1,27 @@
-import Head from "next/head";
 import { useState } from "react";
-import styles from "../styles/Home.module.css";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: grid;
+  width: 100vw;
+  justify-content: center;
+  align-content: center;
+  row-gap: 1em;
+`;
+
+const SubmitButton = styled.button`
+  background-color: #00092e;
+  color: gold;
+  height: 2em;
+  margin-top: 3em;
+  border: ${(props) => (props.active ? "2px solid gold" : "2px solid black")};
+`;
+
+const InputField = styled.input`
+  background-color: #acabab;
+  color: white;
+  height: 2em;
+`;
 
 export default function Home() {
   const [passwordName, setPasswordName] = useState("");
@@ -17,18 +38,22 @@ export default function Home() {
 
   return (
     <>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input
-          value={passwordName}
-          onChange={(event) => setPasswordName(event.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
-      {passwordDoc && (
-        <>
-          {passwordDoc.name} {passwordDoc.value}
-        </>
-      )}
+      <Container>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <InputField
+            value={passwordName}
+            onChange={(event) => setPasswordName(event.target.value)}
+          />
+          <SubmitButton active type="submit">
+            Submit
+          </SubmitButton>
+        </form>
+        {passwordDoc && (
+          <>
+            {passwordDoc.name} {passwordDoc.value}
+          </>
+        )}
+      </Container>
     </>
   );
 }
