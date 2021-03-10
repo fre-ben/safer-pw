@@ -1,6 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+const calcColor = (length: number): string => {
+  return `hsl(${Math.min(length * 12, 120)},100%,50%)`;
+};
+
 const Container = styled.div`
   display: grid;
   width: 100vw;
@@ -14,11 +18,11 @@ const SubmitButton = styled.button`
   color: gold;
   height: 2em;
   margin-top: 3em;
-  border: ${(props) => (props.active ? "2px solid gold" : "2px solid black")};
+  border: ${(props) => (props ? "2px solid gold" : "2px solid black")};
 `;
 
 const InputField = styled.input`
-  background-color: #acabab;
+  background-color: ${(props) => calcColor(props.value.length)};
   color: white;
   height: 2em;
 `;
@@ -44,9 +48,7 @@ export default function Home() {
             value={passwordName}
             onChange={(event) => setPasswordName(event.target.value)}
           />
-          <SubmitButton active type="submit">
-            Submit
-          </SubmitButton>
+          <SubmitButton type="submit">Submit</SubmitButton>
         </form>
         {passwordDoc && (
           <>
