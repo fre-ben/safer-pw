@@ -12,6 +12,8 @@ connectDB(url, "safer-pw-frederik");
 
 const server = http.createServer(
   async (request: http.IncomingMessage, response: http.ServerResponse) => {
+    response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+
     if (request.url === "/") {
       response.statusCode = 200;
       response.setHeader("Content-Type", "text/html");
